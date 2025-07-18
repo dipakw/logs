@@ -1,4 +1,4 @@
-module logs
+module github.com/dipakw/logs
 
 go 1.24.4
 

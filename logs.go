@@ -13,14 +13,15 @@ const (
 	TAG_ERROR = "[..error..] "
 	TAG_WARN  = "[..warn...] "
 
-	TYPE_INFO  = 1
-	TYPE_ERROR = 2
-	TYPE_WARN  = 4
+	INFO  = 1
+	WARN  = 2
+	ERROR = 4
+	ALL   = INFO | WARN | ERROR
 )
 
 var colors = map[uint8]string{
-	TYPE_ERROR: "red",
-	TYPE_WARN:  "yellow",
+	ERROR: "red",
+	WARN:  "yellow",
 }
 
 type Logger struct {
@@ -35,6 +36,7 @@ type Out struct {
 
 type Config struct {
 	NopOut bool
+	Allow  uint8
 	Outs   []*Out
 }
 
@@ -48,21 +50,18 @@ type Log interface {
 }
 
 func New(c *Config) Log {
-	if !c.NopOut {
-		for _, out := range c.Outs {
-			if out.File != "" {
-				d, err := os.OpenFile(out.File, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	for _, out := range c.Outs {
+		if out.File != "" {
+			d, err := os.OpenFile(out.File, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 
-				if err != nil {
-					fmt.Println(err)
-					os.Exit(1)
-
-				}
-
-				out.Target = d
-
-				continue
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
 			}
+
+			out.Target = d
+
+			continue
 		}
 	}
 
@@ -70,7 +69,7 @@ func New(c *Config) Log {
 }
 
 func (l *Logger) write(t uint8, s string) {
-	if l.NopOut {
+	if l.NopOut || (l.Allow&t) == 0 {
 		return
 	}
 
@@ -94,25 +93,25 @@ func (l *Logger) pf(t uint8, tag string, format string, a ...any) {
 }
 
 func (l *Logger) Inff(format string, a ...any) {
-	l.pf(TYPE_INFO, TAG_INFO, format, a...)
+	l.pf(INFO, TAG_INFO, format, a...)
 }
 
 func (l *Logger) Wrnf(format string, a ...any) {
-	l.pf(TYPE_WARN, TAG_WARN, format, a...)
+	l.pf(WARN, TAG_WARN, format, a...)
 }
 
 func (l *Logger) Errf(format string, a ...any) {
-	l.pf(TYPE_ERROR, TAG_ERROR, format, a...)
+	l.pf(ERROR, TAG_ERROR, format, a...)
 }
 
 func (l *Logger) Inf(a ...any) {
-	l.pp(TYPE_INFO, TAG_INFO, a...)
+	l.pp(INFO, TAG_INFO, a...)
 }
 
 func (l *Logger) Wrn(a ...any) {
-	l.pp(TYPE_WARN, TAG_WARN, a...)
+	l.pp(WARN, TAG_WARN, a...)
 }
 
 func (l *Logger) Err(a ...any) {
-	l.pp(TYPE_ERROR, TAG_ERROR, a...)
+	l.pp(ERROR, TAG_ERROR, a...)
 }

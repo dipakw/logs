@@ -15,6 +15,10 @@ import (
 
 func main() {
 	logger := logs.New(&logs.Config{
+		TagInf: "info : $t |", // Optional (default "inf | $d $t |) // $d = Current date (yyyy-mm-dd) $t = Current time (hh:mm:ss)
+		TagWrn: "warn : $t |", // Optional (default "wrn | $d $t |)
+		TagErr: "eror : $t |", // Optional (default "err | $d $t |)
+
 		Outs: []*logs.Out{
 			{
 				Target: os.Stdout,

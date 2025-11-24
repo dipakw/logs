@@ -15,7 +15,7 @@ import (
 
 func main() {
 	logger := logs.New(&logs.Config{
-		Allow: logs.All,
+		Allow: logs.All, // If only "warning" and "error" logs are needed, set this to logs.Warn | logs.Error
 
 		Outs: []*logs.Out{
 			{

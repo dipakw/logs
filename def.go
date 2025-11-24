@@ -8,6 +8,7 @@ const (
 	DefaultTagInfo  = "inf | $d $t | "
 	DefaultTagError = "err | $d $t | "
 	DefaultTagWarn  = "wrn | $d $t | "
+	DefaultTagLog   = "log | $d $t | "
 
 	Info  Type = 1
 	Warn  Type = 2
@@ -41,6 +42,9 @@ type Logs interface {
 	Wrnf(format string, a ...any)
 	Errf(format string, a ...any)
 
+	Log(t Type, a ...any)
+	Logf(t Type, format string, a ...any)
+
 	Must(t Type, a ...any)
 	Mustf(t Type, format string, a ...any)
 }
@@ -63,4 +67,5 @@ type Tags struct {
 	Info  string
 	Warn  string
 	Error string
+	Log   string
 }

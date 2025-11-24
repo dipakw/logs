@@ -50,6 +50,14 @@ func (l *logger) Errf(format string, a ...any) {
 	l.writef(Error, false, format, a...)
 }
 
+func (l *logger) Log(t Type, a ...any) {
+	l.write(t, false, a...)
+}
+
+func (l *logger) Logf(t Type, format string, a ...any) {
+	l.writef(t, false, format, a...)
+}
+
 func (l *logger) Must(t Type, a ...any) {
 	l.write(t, true, a...)
 }

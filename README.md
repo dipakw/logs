@@ -38,6 +38,12 @@ func main() {
 	logger.Err("Some error")
 	logger.Errf("Formatted %s", "error")
 
+	logger.Log(logs.Log, "Some log")
+	logger.Logf(logs.Log, "Formatted %s", "log")
+
+	logger.Write("Some write")
+	logger.Writef("Formatted %s", "write")
+
 	logger.Must(logs.Info, "Must information") // This gets logged regardless of the allow option.
 	logger.Must(logs.Warn, "Must warning")
 	logger.Mustf(logs.Error, "Must formatted %s", "error")

@@ -58,10 +58,29 @@ func (l *logger) Logf(t Type, format string, a ...any) {
 	l.writef(t, false, format, a...)
 }
 
+func (l *logger) Write(a ...any) {
+	l.write(Write, false, a...)
+}
+
+func (l *logger) Writef(format string, a ...any) {
+	l.writef(Write, false, format, a...)
+}
+
 func (l *logger) Must(t Type, a ...any) {
 	l.write(t, true, a...)
 }
 
 func (l *logger) Mustf(t Type, format string, a ...any) {
 	l.writef(t, true, format, a...)
+}
+
+// ----- Log methods ----- //
+func (l *Log) Deny() *Log {
+	l.Allowed = false
+	return l
+}
+
+func (l *Log) Allow() *Log {
+	l.Allowed = true
+	return l
 }

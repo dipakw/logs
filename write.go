@@ -28,6 +28,8 @@ func (l *logger) _write(t Type, must bool, msg string) {
 	case Error:
 		tag = strOr(DefaultTagError, l.cfg.Tags.Error)
 		allow = (uint8(l.cfg.Allow) & uint8(Error)) > 0
+	case Write:
+		allow = true
 	default:
 		tag = strOr(DefaultTagLog, l.cfg.Tags.Log)
 		allow = l.cfg.Allow == All
@@ -37,7 +39,7 @@ func (l *logger) _write(t Type, must bool, msg string) {
 		Type:    t,
 		Message: msg,
 		Tag:     tag,
-		Allow:   allow,
+		Allowed: allow,
 		Must:    must,
 	}
 
@@ -45,7 +47,7 @@ func (l *logger) _write(t Type, must bool, msg string) {
 		log = l.cfg.Before(log)
 	}
 
-	if log == nil || (!must && !log.Allow) {
+	if log == nil || (!must && !log.Allowed) {
 		return
 	}
 

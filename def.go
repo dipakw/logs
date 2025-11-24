@@ -10,11 +10,12 @@ const (
 	DefaultTagWarn  = "wrn | $d $t | "
 	DefaultTagLog   = "log | $d $t | "
 
+	None  Type = 0
 	Info  Type = 1
 	Warn  Type = 2
 	Error Type = 4
-	None  Type = 0
-	All   Type = 1 | 2 | 4
+	Write Type = 8
+	All   Type = 1 | 2 | 4 | 8
 )
 
 var colors = map[Type]string{
@@ -45,6 +46,9 @@ type Logs interface {
 	Log(t Type, a ...any)
 	Logf(t Type, format string, a ...any)
 
+	Write(a ...any)
+	Writef(format string, a ...any)
+
 	Must(t Type, a ...any)
 	Mustf(t Type, format string, a ...any)
 }
@@ -59,7 +63,7 @@ type Log struct {
 	Type    Type
 	Message string
 	Tag     string
-	Allow   bool
+	Allowed bool
 	Must    bool
 }
 

@@ -2,25 +2,46 @@ package logs
 
 import "os"
 
-const (
-	TAG_INFO  = "inf | $d $t |"
-	TAG_ERROR = "err | $d $t |"
-	TAG_WARN  = "wrn | $d $t |"
+type Type uint8
 
-	INFO  = 1
-	WARN  = 2
-	ERROR = 4
-	ALL   = INFO | WARN | ERROR
-	NONE  = 0
+const (
+	DefaultTagInfo  = "inf | $d $t | "
+	DefaultTagError = "err | $d $t | "
+	DefaultTagWarn  = "wrn | $d $t | "
+
+	Info  Type = 1
+	Warn  Type = 2
+	Error Type = 4
+	All   Type = 1 | 2 | 4
 )
 
-var colors = map[uint8]string{
-	ERROR: "red",
-	WARN:  "yellow",
+var colors = map[Type]string{
+	Error: "red",
+	Warn:  "yellow",
 }
 
-type Logger struct {
-	conf *Config
+type logger struct {
+	cfg *Config
+}
+
+type Config struct {
+	Allow  Type
+	Outs   []*Out
+	Tags   Tags
+	Before func(l *Log) *Log
+}
+
+type Logs interface {
+	Inf(a ...any)
+	Wrn(a ...any)
+	Err(a ...any)
+
+	Inff(format string, a ...any)
+	Wrnf(format string, a ...any)
+	Errf(format string, a ...any)
+
+	Must(t Type, a ...any)
+	Mustf(t Type, format string, a ...any)
 }
 
 type Out struct {
@@ -29,11 +50,16 @@ type Out struct {
 	Color  bool
 }
 
-type Config struct {
-	NopOut bool
-	Allow  uint8
-	Outs   []*Out
-	TagInf string
-	TagWrn string
-	TagErr string
+type Log struct {
+	Type    Type
+	Message string
+	Tag     string
+	Allow   bool
+	Must    bool
+}
+
+type Tags struct {
+	Info  string
+	Warn  string
+	Error string
 }

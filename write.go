@@ -46,7 +46,7 @@ func (l *logger) _write(t Type, must bool, msg string) {
 		return
 	}
 
-	tag = replaceTagVars(tag)
+	tag = replaceTagVars(log.Tag)
 
 	for _, out := range l.cfg.Outs {
 		if out.Target == nil {

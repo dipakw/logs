@@ -12,6 +12,7 @@ const (
 	Info  Type = 1
 	Warn  Type = 2
 	Error Type = 4
+	None  Type = 0
 	All   Type = 1 | 2 | 4
 )
 

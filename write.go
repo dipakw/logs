@@ -84,6 +84,6 @@ func strOr(a, b string) string {
 
 func replaceTagVars(t string) string {
 	t = strings.ReplaceAll(t, "$d", time.Now().Format("2006-01-02"))
-	t = strings.ReplaceAll(t, "$t", time.Now().Format("15:04:05.000"))
+	t = strings.ReplaceAll(t, "$t", time.Now().Format("15:04:05.000000"))
 	return t
 }

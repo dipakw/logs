@@ -3,6 +3,7 @@ package logs
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 func New(conf *Config) Logs {
@@ -74,6 +75,10 @@ func (l *logger) Mustf(t Type, format string, a ...any) {
 	l.writef(t, true, format, a...)
 }
 
+func (l *logger) T(t string) Type {
+	return T(t)
+}
+
 // ----- Log methods ----- //
 func (l *Log) Deny() *Log {
 	l.Allowed = false
@@ -83,4 +88,18 @@ func (l *Log) Deny() *Log {
 func (l *Log) Allow() *Log {
 	l.Allowed = true
 	return l
+}
+
+// ----- Helper functions ----- //
+func T(t string) Type {
+	switch strings.ToLower(t) {
+	case "i", "inf", "info", "information":
+		return Info
+	case "w", "wrn", "warn", "warning":
+		return Warn
+	case "e", "err", "error":
+		return Error
+	default:
+		return None
+	}
 }

@@ -51,6 +51,8 @@ type Logs interface {
 
 	Must(t Type, a ...any)
 	Mustf(t Type, format string, a ...any)
+
+	T(t string) Type
 }
 
 type Out struct {

@@ -67,7 +67,13 @@ func (l *logger) _write(t Type, must bool, msg string) {
 }
 
 func (l *logger) write(t Type, must bool, a ...any) {
-	l._write(t, must, fmt.Sprint(a...))
+	msg := fmt.Sprintln(a...)
+
+	if len(msg) > 0 {
+		msg = msg[:len(msg)-1]
+	}
+
+	l._write(t, must, msg)
 }
 
 func (l *logger) writef(t Type, must bool, format string, a ...any) {
